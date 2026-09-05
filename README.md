@@ -67,6 +67,18 @@ open build/Tuck.app
 
 The built app appears in `build/Tuck.app`.
 
+The command-line tool uses the same compression engine:
+
+```sh
+swift run tuck /path/to/video.mov
+```
+
+It prints completed output paths to stdout, progress to stderr, and supports newline-delimited JSON events:
+
+```sh
+swift run tuck --json /path/to/video.mov
+```
+
 ## FFmpeg
 
 Tuck looks for `ffmpeg` and `ffprobe` in the app bundle first, then in common Homebrew locations and `PATH`.
@@ -95,3 +107,21 @@ Scripts/smoke-test.sh
 open build/Tuck.app
 open -a "$(pwd)/build/Tuck.app" /path/to/video.mov
 ```
+
+## Homebrew Distribution
+
+The intended Homebrew shape is one cask that installs both the GUI and CLI:
+
+```sh
+brew tap nathangathright/tuck
+brew install --cask tuck
+```
+
+`Scripts/package-release.sh` builds `dist/Tuck-0.1.0.zip` with this layout:
+
+```text
+Tuck.app
+bin/tuck
+```
+
+It also generates `dist/homebrew/tuck.rb` from the template in `Packaging/Homebrew/Casks/tuck.rb.template`. Upload the zip to the matching GitHub Release, then copy the generated cask into the Homebrew tap.

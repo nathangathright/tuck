@@ -1,0 +1,22 @@
+cask "tuck" do
+  version "__VERSION__"
+  sha256 "__SHA256__"
+
+  url "https://github.com/nathangathright/tuck/releases/download/v#{version}/Tuck-#{version}.zip",
+      verified: "github.com/nathangathright/tuck/"
+  name "Tuck"
+  desc "Dock-first macOS video compressor"
+  homepage "https://github.com/nathangathright/tuck"
+
+  depends_on macos: :sonoma
+  depends_on formula: "ffmpeg"
+
+  app "Tuck.app"
+  binary "bin/tuck"
+
+  uninstall quit: "com.nathangathright.Tuck"
+
+  zap trash: [
+    "~/Library/Preferences/com.nathangathright.Tuck.plist",
+  ]
+end

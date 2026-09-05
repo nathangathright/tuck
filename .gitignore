@@ -18,6 +18,7 @@ Package.resolved
 *.app
 *.dSYM
 *.xcarchive
+dist/
 
 # Local tooling
 .env

@@ -9,12 +9,17 @@ let package = Package(
     ],
     products: [
         .library(name: "TuckCore", targets: ["TuckCore"]),
-        .executable(name: "Tuck", targets: ["TuckApp"])
+        .executable(name: "TuckApp", targets: ["TuckApp"]),
+        .executable(name: "tuck", targets: ["TuckCLI"])
     ],
     targets: [
         .target(name: "TuckCore"),
         .executableTarget(
             name: "TuckApp",
+            dependencies: ["TuckCore"]
+        ),
+        .executableTarget(
+            name: "TuckCLI",
             dependencies: ["TuckCore"]
         ),
         .testTarget(
