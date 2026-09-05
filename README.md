@@ -125,3 +125,11 @@ bin/tuck
 ```
 
 It also generates `dist/homebrew/tuck.rb` from the template in `Packaging/Homebrew/Casks/tuck.rb.template`. Upload the zip to the matching GitHub Release, then copy the generated cask into the Homebrew tap.
+
+For public distribution, install a Developer ID Application certificate and store a `notarytool` keychain profile, then run:
+
+```sh
+CODESIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
+  NOTARIZE=1 \
+  Scripts/package-release.sh 0.1.0
+```

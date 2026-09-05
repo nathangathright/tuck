@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIGURATION="${CONFIGURATION:-release}"
 UNIVERSAL="${UNIVERSAL:-0}"
+CODESIGN_IDENTITY="${CODESIGN_IDENTITY:--}"
 APP_DIR="$ROOT_DIR/build/Tuck.app"
 CONTENTS_DIR="$APP_DIR/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
@@ -40,7 +41,19 @@ if [[ -d "$ROOT_DIR/Vendor/ffmpeg" ]]; then
 fi
 
 if command -v codesign >/dev/null 2>&1; then
-  codesign --force --deep --sign - "$APP_DIR" >/dev/null
+  codesign_flags=(--force --sign "$CODESIGN_IDENTITY")
+
+  if [[ "$CODESIGN_IDENTITY" != "-" ]]; then
+    codesign_flags+=(--timestamp --options runtime)
+  fi
+
+  if [[ -d "$RESOURCES_DIR/bin" ]]; then
+    while IFS= read -r -d '' executable_path; do
+      codesign "${codesign_flags[@]}" "$executable_path" >/dev/null
+    done < <(find "$RESOURCES_DIR/bin" -type f -perm -111 -print0)
+  fi
+
+  codesign "${codesign_flags[@]}" "$APP_DIR" >/dev/null
 fi
 
 echo "$APP_DIR"
