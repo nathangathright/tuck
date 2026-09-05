@@ -81,11 +81,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let panel = NSOpenPanel()
         panel.title = "Choose Videos"
         panel.prompt = "Compress"
-        panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
         panel.resolvesAliases = true
         panel.allowedContentTypes = [.movie]
+        panel.allowsMultipleSelection = true
 
         currentOpenPanel = panel
         isPresentingOpenPanel = true
