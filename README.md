@@ -54,3 +54,44 @@ Use FFmpeg and FFprobe, either bundled or discovered in common Homebrew location
 - Multi-selection works.
 - Outputs decode successfully.
 - Originals remain unchanged.
+
+## Build and Run
+
+Tuck is a Swift/AppKit macOS 14+ app with no main window. The Swift package keeps the compression pipeline testable, and `Scripts/build-app.sh` wraps the executable in a Launch Services `.app` bundle so Dock clicks and Dock file drops work like a normal Mac app.
+
+```sh
+swift test
+Scripts/build-app.sh
+open build/Tuck.app
+```
+
+The built app appears in `build/Tuck.app`.
+
+## FFmpeg
+
+Tuck looks for `ffmpeg` and `ffprobe` in the app bundle first, then in common Homebrew locations and `PATH`.
+
+For local development:
+
+```sh
+brew install ffmpeg
+```
+
+For bundled distribution, place executable binaries at:
+
+```text
+Vendor/ffmpeg/ffmpeg
+Vendor/ffmpeg/ffprobe
+```
+
+`Scripts/build-app.sh` copies those into `Tuck.app/Contents/Resources/bin`.
+
+## Verification Notes
+
+Automated tests cover output naming, profile selection, FFmpeg-based compression, output decoding with FFprobe, and original-file preservation when FFmpeg is installed. Manual Dock flows still need to be exercised against the built app:
+
+```sh
+Scripts/smoke-test.sh
+open build/Tuck.app
+open -a "$(pwd)/build/Tuck.app" /path/to/video.mov
+```
